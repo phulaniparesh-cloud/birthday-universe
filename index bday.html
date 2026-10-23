@@ -1,0 +1,1880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>A Little Universe For You ❤️✨</title>
+  <meta name="description" content="A cinematic, deeply romantic interactive birthday surprise website celebrating the one you love under a starry cosmos." />
+  <meta property="og:title" content="A Little Universe For You ❤️✨" />
+  <meta property="og:description" content="A personal digital love story and romantic birthday surprise." />
+  <meta property="og:type" content="website" />
+  <meta name="theme-color" content="#04040c" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-deep: #04040e;
+      --bg-nebula: #0b071e;
+      --rose: #ff4d79;
+      --rose-soft: #ffa8ba;
+      --gold: #f6c87a;
+      --gold-bright: #ffe6a3;
+      --violet: #8e68ff;
+      --text-main: #fbfbfc;
+      --text-muted: rgba(251, 251, 252, 0.72);
+      --glass-bg: rgba(16, 14, 30, 0.65);
+      --glass-border: rgba(255, 255, 255, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      min-height: 100dvh;
+      overflow: hidden;
+      background: var(--bg-deep);
+      color: var(--text-main);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      position: relative;
+    }
+
+    /* Ambient Canvas */
+    #universeCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* Top Control Bar */
+    .top-controls {
+      position: fixed;
+      top: env(safe-area-inset-top, 16px);
+      left: 0;
+      right: 0;
+      height: 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+      z-index: 50;
+      pointer-events: auto;
+    }
+
+    .brand-pill {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 15px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.75);
+      text-shadow: 0 0 12px rgba(255, 255, 255, 0.3);
+    }
+
+    .control-btn-group {
+      display: flex;
+      gap: 10px;
+    }
+
+    .icon-btn {
+      min-width: 44px;
+      min-height: 44px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      font-size: 16px;
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s;
+    }
+    .icon-btn:active {
+      transform: scale(0.92);
+      background: rgba(255, 255, 255, 0.18);
+    }
+
+    /* Scene Container */
+    #sceneContainer {
+      position: relative;
+      width: 100%;
+      height: 100dvh;
+      z-index: 10;
+      overflow: hidden;
+    }
+
+    .scene {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      opacity: 0;
+      visibility: hidden;
+      transform: scale(0.96) translateY(8px);
+      transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), visibility 1.2s;
+      pointer-events: none;
+      text-align: center;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .scene.active {
+      opacity: 1;
+      visibility: visible;
+      transform: scale(1) translateY(0);
+      pointer-events: auto;
+    }
+
+    /* Glowing Moon in background of scene 1 and 10 */
+    .moon {
+      position: absolute;
+      top: 12%;
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #fffdf4 0%, #f6e5b8 50%, #cca55f 100%);
+      box-shadow: 0 0 45px rgba(246, 200, 122, 0.55), 0 0 100px rgba(246, 200, 122, 0.25);
+      opacity: 0.88;
+      filter: blur(0.4px);
+      animation: moonFloat 8s ease-in-out infinite alternate;
+    }
+    @keyframes moonFloat {
+      0% { transform: translateY(0px) scale(1); }
+      100% { transform: translateY(-10px) scale(1.03); }
+    }
+
+    /* Typography */
+    .font-serif {
+      font-family: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+    }
+    .font-cormorant {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+    }
+
+    .title-large {
+      font-size: clamp(28px, 6.5vw, 46px);
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      line-height: 1.22;
+      color: #fff;
+      text-shadow: 0 0 30px rgba(255, 255, 255, 0.35);
+      margin-bottom: 14px;
+    }
+
+    .sub-glow {
+      font-size: clamp(16px, 4vw, 20px);
+      color: var(--rose-soft);
+      letter-spacing: 0.05em;
+      margin-bottom: 24px;
+      text-shadow: 0 0 18px rgba(255, 77, 121, 0.4);
+    }
+
+    .prose-text {
+      font-size: clamp(16px, 3.8vw, 19px);
+      color: var(--text-muted);
+      line-height: 1.7;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    /* Buttons */
+    .btn-universe {
+      min-height: 52px;
+      padding: 14px 34px;
+      border-radius: 30px;
+      background: linear-gradient(135deg, rgba(255, 77, 121, 0.9) 0%, rgba(142, 104, 255, 0.9) 100%);
+      color: #ffffff;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      box-shadow: 0 8px 30px rgba(255, 77, 121, 0.35), 0 0 15px rgba(142, 104, 255, 0.3);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      margin-top: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-universe:active {
+      transform: scale(0.96);
+      box-shadow: 0 4px 18px rgba(255, 77, 121, 0.25);
+    }
+    .btn-universe::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(60deg, transparent 40%, rgba(255,255,255,0.3) 50%, transparent 60%);
+      transform: rotate(25deg);
+      animation: btnShine 4s infinite linear;
+    }
+    @keyframes btnShine {
+      0% { transform: translateX(-100%) rotate(25deg); }
+      100% { transform: translateX(100%) rotate(25deg); }
+    }
+
+    .btn-secondary {
+      min-height: 48px;
+      padding: 12px 28px;
+      border-radius: 26px;
+      background: rgba(255, 255, 255, 0.09);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: all 0.25s ease;
+      margin-top: 20px;
+    }
+    .btn-secondary:active {
+      background: rgba(255, 255, 255, 0.16);
+      transform: scale(0.97);
+    }
+
+    /* Glass Card */
+    .glass-card {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(142, 104, 255, 0.1);
+      padding: clamp(24px, 5vw, 36px);
+      max-width: 520px;
+      width: 100%;
+      position: relative;
+    }
+
+    /* Realistic 3D Wax-Sealed Envelope & Folded Letter */
+    .envelope-box {
+      width: 290px;
+      height: 185px;
+      position: relative;
+      margin: 25px auto 30px;
+      cursor: pointer;
+      perspective: 1200px;
+    }
+    .envelope-back {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #241334, #150d22);
+      border-radius: 14px;
+      border: 1px solid rgba(255, 168, 186, 0.2);
+      box-shadow: 0 16px 45px rgba(0,0,0,0.7), 0 0 35px rgba(255, 77, 121, 0.2);
+      z-index: 1;
+    }
+
+    /* Folded Letter Sheet inside envelope */
+    .letter-paper-preview {
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      bottom: 8px;
+      height: 165px;
+      background: linear-gradient(180deg, #fffdf8 0%, #faf3e6 100%);
+      border-radius: 10px;
+      color: #1a1a24;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+      border: 1px solid rgba(212, 175, 55, 0.4);
+      z-index: 2;
+      transform: translateY(0) scale(0.96);
+      opacity: 0;
+      visibility: hidden;
+      transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease, visibility 0.5s ease;
+      overflow: hidden;
+    }
+    /* Fold crease styling */
+    .letter-paper-preview::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(160, 120, 70, 0.25), transparent);
+      box-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+    }
+    .letter-paper-preview::after {
+      content: '';
+      position: absolute;
+      inset: 5px;
+      border: 1px solid rgba(212, 175, 55, 0.25);
+      border-radius: 6px;
+      pointer-events: none;
+    }
+
+    /* When Envelope is Opened */
+    .envelope-box.opened .letter-paper-preview {
+      transform: translateY(-95px) scale(1.02);
+      opacity: 1;
+      visibility: visible;
+      z-index: 8;
+      box-shadow: 0 20px 45px rgba(0,0,0,0.5), 0 0 25px rgba(246, 200, 122, 0.3);
+      transition-delay: 0.35s;
+    }
+
+    /* Envelope Front Pocket Layers */
+    .envelope-pocket-svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 4;
+      pointer-events: none;
+      filter: drop-shadow(0 -2px 4px rgba(0,0,0,0.15));
+    }
+
+    /* Envelope Top Flap */
+    .envelope-flap-svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 110px;
+      transform-origin: top center;
+      transition: transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 6;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.35));
+    }
+    .envelope-box.opened .envelope-flap-svg {
+      transform: rotateX(180deg);
+      z-index: 1;
+      filter: none;
+    }
+
+    /* Wax Seal */
+    .envelope-wax {
+      position: absolute;
+      top: 98px;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #ff4d79 0%, #bd1544 65%, #7a0c2b 100%);
+      box-shadow: 0 4px 18px rgba(255, 77, 121, 0.8), 0 0 10px rgba(246, 200, 122, 0.4), inset 0 2px 3px rgba(255,255,255,0.45);
+      border: 1px solid rgba(246, 200, 122, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 20px;
+      z-index: 7;
+      transition: all 0.4s ease;
+      cursor: pointer;
+    }
+    .envelope-box.opened .envelope-wax {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.2);
+      pointer-events: none;
+    }
+
+    /* Love Letter Scene */
+    .letter-scroll {
+      background: radial-gradient(circle at 50% 0%, #fffbf2 0%, #faedd9 100%);
+      color: #2b1f28;
+      border-radius: 20px;
+      padding: clamp(20px, 5.5vw, 36px);
+      max-width: 540px;
+      width: 100%;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.7), 0 0 40px rgba(246, 200, 122, 0.2);
+      border: 1px solid rgba(246, 200, 122, 0.5);
+      position: relative;
+      text-align: left;
+      overflow: hidden;
+      max-height: min(72dvh, 600px);
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      word-break: break-word;
+    }
+    /* Subtle stationery creases across the letter paper */
+    .letter-scroll::before {
+      content: '';
+      position: absolute;
+      top: 33%;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(125, 28, 62, 0.08), transparent);
+      box-shadow: 0 1px 2px rgba(255, 255, 255, 0.6);
+      pointer-events: none;
+    }
+    .letter-scroll::after {
+      content: '';
+      position: absolute;
+      top: 66%;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(125, 28, 62, 0.08), transparent);
+      box-shadow: 0 1px 2px rgba(255, 255, 255, 0.6);
+      pointer-events: none;
+    }
+    .letter-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(24px, 5.2vw, 32px);
+      color: #7d1c3e;
+      text-align: center;
+      margin-bottom: 20px;
+      border-bottom: 1px dashed rgba(125, 28, 62, 0.25);
+      padding-bottom: 12px;
+    }
+    .letter-body {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(17px, 4.3vw, 21px);
+      line-height: 1.75;
+      color: #382933;
+      min-height: 220px;
+      white-space: pre-line;
+      letter-spacing: 0.01em;
+    }
+    .cursor-blink {
+      display: inline-block;
+      width: 2px;
+      height: 1.1em;
+      background: #7d1c3e;
+      vertical-align: text-bottom;
+      animation: blink 0.8s infinite;
+    }
+    @keyframes blink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
+
+    /* Memory Galaxy Overlay */
+    .galaxy-container {
+      position: relative;
+      width: 100%;
+      max-width: 500px;
+      height: 380px;
+      margin: 10px auto;
+    }
+    .memory-star {
+      position: absolute;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 20;
+      transform: translate(-50%, -50%);
+      transition: transform 0.25s ease;
+    }
+    .memory-star:active {
+      transform: translate(-50%, -50%) scale(1.25);
+    }
+    .memory-star-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 0 18px #fff, 0 0 35px var(--rose);
+      animation: pulseStar 2s infinite ease-in-out;
+    }
+    @keyframes pulseStar {
+      0%, 100% { transform: scale(0.9); opacity: 0.85; }
+      50% { transform: scale(1.3); opacity: 1; box-shadow: 0 0 24px #fff, 0 0 45px var(--rose); }
+    }
+    .memory-card-pop {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      right: 20px;
+      background: rgba(18, 14, 34, 0.92);
+      border: 1px solid rgba(255, 77, 121, 0.4);
+      border-radius: 18px;
+      padding: 16px 20px;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      transform: translateY(20px);
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 30;
+      text-align: center;
+    }
+    .memory-card-pop.show {
+      transform: translateY(0);
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Cake Scene */
+    .cake-wrapper {
+      position: relative;
+      width: 240px;
+      height: 210px;
+      margin: 15px auto 25px;
+    }
+    .cake-base {
+      position: absolute;
+      bottom: 10px;
+      left: 20px;
+      width: 200px;
+      height: 75px;
+      border-radius: 16px;
+      background: linear-gradient(180deg, #ff8fa3 0%, #c44062 100%);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 3px 6px rgba(255,255,255,0.4);
+    }
+    .cake-top {
+      position: absolute;
+      bottom: 75px;
+      left: 45px;
+      width: 150px;
+      height: 65px;
+      border-radius: 14px;
+      background: linear-gradient(180deg, #ffc0cb 0%, #e06080 100%);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3), inset 0 3px 6px rgba(255,255,255,0.4);
+    }
+    .cake-frosting {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 18px;
+      background: #fff;
+      border-radius: 14px 14px 10px 10px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+    }
+    .candles-row {
+      position: absolute;
+      bottom: 140px;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      gap: 22px;
+    }
+    .candle {
+      width: 10px;
+      height: 38px;
+      background: linear-gradient(180deg, #fff, #f6c87a);
+      border-radius: 4px;
+      position: relative;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+    .flame {
+      position: absolute;
+      top: -24px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 16px;
+      height: 26px;
+      border-radius: 50% 50% 20% 20%;
+      background: radial-gradient(ellipse at 50% 80%, #ffffff 0%, #ffe6a3 35%, #ff5e3a 75%, transparent 100%);
+      box-shadow: 0 0 20px #ffe6a3, 0 0 35px #ff5e3a;
+      animation: flameFlicker 1.2s infinite alternate ease-in-out;
+      transform-origin: bottom center;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    @keyframes flameFlicker {
+      0% { transform: translateX(-50%) rotate(-2deg) scale(0.96); }
+      50% { transform: translateX(-50%) rotate(2deg) scale(1.04); }
+      100% { transform: translateX(-50%) rotate(-1deg) scale(1); }
+    }
+    .flame.blown {
+      opacity: 0;
+      transform: translateX(-50%) scale(0.2) translateY(-10px);
+    }
+    .smoke-wisp {
+      position: absolute;
+      top: -30px;
+      left: 50%;
+      width: 6px;
+      height: 16px;
+      background: rgba(255, 255, 255, 0.4);
+      border-radius: 50%;
+      filter: blur(3px);
+      opacity: 0;
+      transform: translateX(-50%);
+    }
+    .flame.blown + .smoke-wisp {
+      animation: smokeRise 1.6s forwards ease-out;
+    }
+    @keyframes smokeRise {
+      0% { opacity: 0.8; transform: translateX(-50%) translateY(0) scale(1); }
+      100% { opacity: 0; transform: translateX(-30%) translateY(-40px) scale(3); }
+    }
+
+    /* Gift Box Scene */
+    .gift-container {
+      width: 170px;
+      height: 170px;
+      position: relative;
+      margin: 20px auto 30px;
+      perspective: 800px;
+      cursor: pointer;
+    }
+    .gift-lid {
+      width: 184px;
+      height: 44px;
+      position: absolute;
+      top: 0;
+      left: -7px;
+      background: linear-gradient(135deg, #ff4d79, #9c27b0);
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+      z-index: 10;
+      transform-origin: top left;
+      transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .gift-lid-ribbon {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 24px;
+      background: linear-gradient(90deg, #f6c87a, #ffe6a3, #f6c87a);
+      box-shadow: 0 0 10px rgba(246, 200, 122, 0.5);
+    }
+    .gift-bow {
+      position: absolute;
+      top: -24px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 48px;
+      height: 26px;
+      display: flex;
+      justify-content: center;
+    }
+    .gift-bow::before, .gift-bow::after {
+      content: '';
+      width: 24px;
+      height: 24px;
+      border: 4px solid #f6c87a;
+      border-radius: 50% 50% 10% 50%;
+      transform: rotate(45deg);
+      box-shadow: 0 0 12px rgba(246, 200, 122, 0.6);
+    }
+    .gift-bow::after {
+      border-radius: 50% 50% 50% 10%;
+      transform: rotate(-45deg);
+    }
+    .gift-box {
+      width: 170px;
+      height: 125px;
+      position: absolute;
+      bottom: 0;
+      background: linear-gradient(135deg, #e62058, #7b1fa2);
+      border-radius: 0 0 14px 14px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.6), 0 0 30px rgba(255, 77, 121, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .gift-box-ribbon-v {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 24px;
+      background: linear-gradient(90deg, #f6c87a, #ffe6a3, #f6c87a);
+    }
+    .gift-box-ribbon-h {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      transform: translateY(-50%);
+      height: 24px;
+      background: linear-gradient(180deg, #f6c87a, #ffe6a3, #f6c87a);
+    }
+    .gift-container.opened .gift-lid {
+      transform: rotateX(110deg) rotateZ(-30deg) translateY(-30px);
+    }
+
+    /* Modal for Customization */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 100;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+    .modal-overlay.open {
+      opacity: 1;
+      visibility: visible;
+    }
+    .modal-card {
+      background: #120e24;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 24px;
+      padding: 28px;
+      width: 100%;
+      max-width: 480px;
+      max-height: 85vh;
+      overflow-y: auto;
+      color: #fff;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+    }
+    .form-group {
+      margin-bottom: 16px;
+      text-align: left;
+    }
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--rose-soft);
+      margin-bottom: 6px;
+    }
+    .form-input, .form-textarea {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      padding: 12px 14px;
+      color: #fff;
+      font-family: inherit;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-input:focus, .form-textarea:focus {
+      border-color: var(--rose);
+    }
+    .form-textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    /* Cinematic cinematic text glow classes */
+    .glow-gold {
+      color: var(--gold-bright);
+      text-shadow: 0 0 25px rgba(246, 200, 122, 0.6);
+    }
+    .glow-rose {
+      color: var(--rose);
+      text-shadow: 0 0 25px rgba(255, 77, 121, 0.6);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Fullscreen Cosmic Canvas -->
+  <canvas id="universeCanvas"></canvas>
+
+  <!-- Top Bar -->
+  <header class="top-controls">
+    <div class="brand-pill" id="brandTag">A Little Universe For You ✨</div>
+    <div class="control-btn-group">
+      <button class="icon-btn" id="audioToggleBtn" title="Toggle audio ambience" aria-label="Audio switch">
+        <span id="audioIcon">🔇</span>
+      </button>
+      <button class="icon-btn" id="configEditBtn" title="Customize for your special person" aria-label="Personalize">
+        <span>✏️</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Interactive Scenes -->
+  <main id="sceneContainer">
+
+    <!-- SCENE 1: THE SECRET BEGINNING -->
+    <section class="scene active" id="scene-1">
+      <div class="moon"></div>
+      <div style="z-index: 2; margin-top: 80px;">
+        <p class="prose-text font-serif" id="scene1-text" style="min-height: 70px; font-size: clamp(20px, 4.8vw, 28px); color: #fbfbfc; transition: opacity 0.8s;">
+          Tonight feels a little different…
+        </p>
+        <div id="scene1-action" style="opacity: 0; transition: opacity 1s 0.3s; margin-top: 30px;">
+          <p style="font-size: 17px; color: var(--rose-soft); margin-bottom: 10px;">Are you ready?</p>
+          <button class="btn-universe" id="btn-enter">
+            ENTER ✨
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCENE 2: BIRTHDAY REVEAL -->
+    <section class="scene" id="scene-2">
+      <div class="glass-card" style="padding-top: 40px; padding-bottom: 40px;">
+        <div id="reveal-date-number" style="font-size: clamp(54px, 14vw, 92px); font-weight: 700; color: #fff; text-shadow: 0 0 40px rgba(246, 200, 122, 0.7); line-height: 1; margin-bottom: 12px; font-family: 'Playfair Display', serif;">
+          06
+        </div>
+        <div id="reveal-sub" class="sub-glow" style="font-size: clamp(18px, 4.5vw, 24px);">
+          A magical day in the stars...
+        </div>
+        <p class="prose-text" id="reveal-extra" style="opacity: 0; transition: opacity 0.8s; margin-top: 10px;">
+          The day that makes every single moment brighter.
+        </p>
+        <button class="btn-universe" id="btn-to-name" style="margin-top: 28px;">
+          CONTINUE TO YOUR SURPRISE 💌
+        </button>
+      </div>
+    </section>
+
+    <!-- SCENE 3: THE NAME REVEAL -->
+    <section class="scene" id="scene-3">
+      <h2 class="title-large font-serif">I made something for you…</h2>
+      <p class="sub-glow">Tap the letter to unfold what's inside</p>
+
+      <div class="envelope-box" id="envelopeBox" title="Tap to open your surprise">
+        <!-- Back inside panel -->
+        <div class="envelope-back"></div>
+
+        <!-- Folded letter sheet tucked inside (hidden when closed, slides out when opened) -->
+        <div class="letter-paper-preview" id="letterPaperPreview">
+          <span style="font-size: 11px; color: #a12b4e; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em;">For My Special One</span>
+          <h3 id="envelopeRecipientText" style="font-family: 'Playfair Display', serif; font-size: clamp(19px, 4.6vw, 24px); color: #1d1222; margin-top: 6px; line-height: 1.3;">
+            Happy Birthday,<br>My Love ❤️
+          </h3>
+          <span style="font-size: 11px; color: #8e68ff; margin-top: 8px; font-weight: 500;">(Tap to read your letter 📜)</span>
+        </div>
+
+        <!-- Front Pocket Layers (covers the letter completely when closed) -->
+        <svg class="envelope-pocket-svg" viewBox="0 0 290 185" preserveAspectRatio="none">
+          <polygon points="0,0 145,108 0,185" fill="#29143a" stroke="rgba(255,168,186,0.12)" stroke-width="0.5" />
+          <polygon points="290,0 145,108 290,185" fill="#220f32" stroke="rgba(255,168,186,0.12)" stroke-width="0.5" />
+          <polygon points="0,185 145,95 290,185" fill="#321747" stroke="rgba(255,168,186,0.2)" stroke-width="0.5" />
+        </svg>
+
+        <!-- Top Triangular Flap -->
+        <svg class="envelope-flap-svg" viewBox="0 0 290 110" preserveAspectRatio="none">
+          <polygon points="0,0 290,0 145,106" fill="#3e1b56" stroke="rgba(255,168,186,0.3)" stroke-width="0.8" />
+        </svg>
+
+        <!-- Crimson Wax Seal -->
+        <div class="envelope-wax">❤️</div>
+      </div>
+
+      <div id="envelopeButtons">
+        <button class="btn-universe" id="btn-open-envelope">
+          OPEN YOUR SURPRISE 💌
+        </button>
+      </div>
+      <div id="envelopeContinueBtn" style="display: none;">
+        <button class="btn-universe" id="btn-to-letter">
+          READ MY HEART →
+        </button>
+      </div>
+    </section>
+
+    <!-- SCENE 4: THE LOVE LETTER -->
+    <section class="scene" id="scene-4">
+      <div class="letter-scroll">
+        <h2 class="letter-title" id="letterHeading">To My Favourite Person ❤️</h2>
+        <div class="letter-body" id="letterTypingBody">
+          <!-- Typewriter content will stream here -->
+        </div>
+        <div style="text-align: right; margin-top: 15px; font-family: 'Cormorant Garamond', serif; font-size: 20px; font-style: italic; color: #7d1c3e;" id="letterSender">
+          — With all my love
+        </div>
+      </div>
+      <button class="btn-universe" id="btn-to-galaxy" style="margin-top: 24px;">
+        KEEP READING →
+      </button>
+    </section>
+
+    <!-- SCENE 5: THE MEMORY GALAXY -->
+    <section class="scene" id="scene-5">
+      <h2 class="title-large font-serif">Some of my favourite memories…</h2>
+      <p class="sub-glow">…have you in them.</p>
+      <p style="font-size: 13px; color: rgba(255,255,255,0.6); margin-bottom: 10px;">(Touch each glowing star in the galaxy)</p>
+
+      <div class="galaxy-container" id="galaxyBox">
+        <!-- Interactive star markers generated in JS -->
+        <div class="memory-card-pop" id="memoryCardPop">
+          <p id="memoryPopText" style="font-size: 17px; color: #fff; font-family: 'Cormorant Garamond', serif; font-style: italic;">
+            Tap a star to reveal a memory
+          </p>
+        </div>
+      </div>
+
+      <button class="btn-universe" id="btn-to-heartbeat">
+        OUR HEARTS BEAT TOGETHER →
+      </button>
+    </section>
+
+    <!-- SCENE 6: THE HEARTBEAT -->
+    <section class="scene" id="scene-6">
+      <div style="max-width: 480px; width: 100%;">
+        <p class="prose-text font-serif" id="heartbeat-text-1" style="font-size: clamp(22px, 5.2vw, 30px); color: #fff; min-height: 40px; margin-bottom: 14px;">
+          You know what my favourite sound is?
+        </p>
+        <p class="sub-glow" id="heartbeat-text-2" style="opacity: 0; transition: opacity 1.2s; font-size: clamp(20px, 4.8vw, 26px); color: var(--rose);">
+          Your presence. ❤️
+        </p>
+        <div style="height: 180px; display: flex; align-items: center; justify-content: center; position: relative;">
+          <!-- 3D Heart beat rendered directly on Canvas layer -->
+          <div style="font-size: 14px; color: rgba(255, 255, 255, 0.6); margin-top: 130px;" id="heartbeatSubHint">
+            Every beat whispers your name...
+          </div>
+        </div>
+        <button class="btn-universe" id="btn-to-cake">
+          MAKE A WISH 🎂
+        </button>
+      </div>
+    </section>
+
+    <!-- SCENE 7: THE BIRTHDAY CAKE -->
+    <section class="scene" id="scene-7">
+      <h2 class="title-large font-serif">Make a wish…</h2>
+      <p class="sub-glow">Close your eyes and think of something beautiful</p>
+
+      <div class="cake-wrapper" id="cakeWrapper">
+        <div class="candles-row" id="candlesRow">
+          <!-- 3 candles with flame -->
+          <div class="candle">
+            <div class="flame"></div>
+            <div class="smoke-wisp"></div>
+          </div>
+          <div class="candle">
+            <div class="flame"></div>
+            <div class="smoke-wisp"></div>
+          </div>
+          <div class="candle">
+            <div class="flame"></div>
+            <div class="smoke-wisp"></div>
+          </div>
+        </div>
+        <div class="cake-top">
+          <div class="cake-frosting"></div>
+        </div>
+        <div class="cake-base">
+          <div class="cake-frosting"></div>
+        </div>
+      </div>
+
+      <div id="cakeActionArea">
+        <button class="btn-universe" id="btn-blow-candles">
+          BLOW THE CANDLES 🕯️
+        </button>
+        <p style="font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 10px;" id="micHint">
+          Tap button or blow softly into microphone
+        </p>
+      </div>
+    </section>
+
+    <!-- SCENE 8: THE WISH -->
+    <section class="scene" id="scene-8">
+      <div class="glass-card">
+        <p class="font-serif" style="font-size: clamp(20px, 4.6vw, 26px); line-height: 1.6; color: #fff;" id="wishLine1">
+          I don't know what you wished for…
+        </p>
+        <p class="sub-glow" style="margin-top: 16px; font-size: clamp(19px, 4.2vw, 24px);" id="wishLine2">
+          But I know what I wish for.
+        </p>
+        <div id="wishContinuation" style="margin-top: 20px; font-size: clamp(17px, 4vw, 21px); line-height: 1.8; color: var(--gold-bright); font-family: 'Cormorant Garamond', serif;">
+          “I wish that I get to celebrate many more birthdays with you.”
+          <br>
+          <span style="display: block; margin-top: 12px; font-size: 20px; color: var(--rose-soft);">
+            Again. and again. and again. ❤️
+          </span>
+        </div>
+        <button class="btn-universe" id="btn-to-gift" style="margin-top: 26px;">
+          ONE LAST SURPRISE 🎁
+        </button>
+      </div>
+    </section>
+
+    <!-- SCENE 9: THE GIFT BOX -->
+    <section class="scene" id="scene-9">
+      <h2 class="title-large font-serif">One last surprise…</h2>
+      <p class="sub-glow">A gift wrapped with all my affection</p>
+
+      <div class="gift-container" id="giftBoxContainer">
+        <div class="gift-lid">
+          <div class="gift-bow"></div>
+          <div class="gift-lid-ribbon"></div>
+        </div>
+        <div class="gift-box">
+          <div class="gift-box-ribbon-v"></div>
+          <div class="gift-box-ribbon-h"></div>
+        </div>
+      </div>
+
+      <div id="giftActionArea">
+        <button class="btn-universe" id="btn-open-gift">
+          OPEN IT 🎁
+        </button>
+      </div>
+
+      <div id="giftRevealArea" style="display: none; margin-top: 20px;">
+        <h3 class="font-serif glow-rose" style="font-size: clamp(24px, 5.5vw, 36px); line-height: 1.3;">
+          YOU ARE MY FAVOURITE GIFT. ❤️
+        </h3>
+        <button class="btn-universe" id="btn-to-final" style="margin-top: 24px;">
+          OUR UNIVERSE FOREVER ✨
+        </button>
+      </div>
+    </section>
+
+    <!-- SCENE 10: FINAL CINEMATIC REVEAL -->
+    <section class="scene" id="scene-10">
+      <div class="moon" style="top: 8%; width: 130px; height: 130px;"></div>
+      <div class="glass-card" style="margin-top: 100px; padding: clamp(28px, 6vw, 42px);">
+        <h1 class="title-large font-serif glow-gold" style="margin-bottom: 8px;">
+          HAPPY BIRTHDAY<br><span id="finalRecipient" class="glow-rose">MY LOVE ❤️</span>
+        </h1>
+        <div style="font-family: 'Cormorant Garamond', serif; font-size: clamp(19px, 4.4vw, 23px); line-height: 1.7; color: #fff; margin-top: 14px;">
+          <p>Today is your birthday…</p>
+          <p style="margin-top: 6px; color: var(--rose-soft);">
+            But honestly, every day feels a little better because you're in my life.
+          </p>
+        </div>
+        <p style="margin-top: 18px; font-size: 16px; color: var(--gold-bright); font-weight: 500;" id="finalCustomQuote">
+          I love you more than words can explain. ❤️♾️
+        </p>
+
+        <button class="btn-universe" id="btn-replay" style="margin-top: 28px;">
+          REPLAY OUR LITTLE UNIVERSE ✨
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Personalization Modal -->
+  <div class="modal-overlay" id="configModal">
+    <div class="modal-card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h3 style="font-size: 18px; font-weight: 600; color: #fff;">Personalize This Universe</h3>
+        <button class="icon-btn" id="closeModalBtn" style="min-width: 36px; min-height: 36px;">✕</button>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="cfgName">Recipient's Name / Nickname</label>
+        <input class="form-input" id="cfgName" type="text" placeholder="e.g. Maya / My Love" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="cfgRelationship">Relationship / Callout</label>
+        <input class="form-input" id="cfgRelationship" type="text" placeholder="e.g. My Love / Sweetheart" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="cfgDate">Birthday Date</label>
+        <input class="form-input" id="cfgDate" type="text" placeholder="e.g. 06 October" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="cfgSender">Your Name / Sign-off</label>
+        <input class="form-input" id="cfgSender" type="text" placeholder="e.g. Yours Forever" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="cfgLetter">Love Letter Message</label>
+        <textarea class="form-textarea" id="cfgLetter" placeholder="Write your heartfelt letter here..."></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="cfgFinal">Closing Message</label>
+        <input class="form-input" id="cfgFinal" type="text" placeholder="e.g. I love you more than words can explain. ❤️" />
+      </div>
+      <button class="btn-universe" id="btnSaveConfig" style="width: 100%; margin-top: 10px;">
+        SAVE & UPDATE UNIVERSE ✨
+      </button>
+    </div>
+  </div>
+
+  <script>
+    /* ==================================================
+       CONFIG: EASY TO CUSTOMIZE
+       ================================================== */
+    const CONFIG = {
+      name: "My Love",
+      senderName: "Yours Forever",
+      relationship: "My Love",
+      birthdayDate: "06 October",
+      letter: "Today isn't just another birthday.\n\nIt's the day the person who makes my world a little brighter came into it.\n\nThank you for every smile,\nevery conversation,\nevery memory,\nand every little moment.\n\nI hope today reminds you\njust how loved you really are.\n\nHappy Birthday, my love.\n\nYou deserve the whole universe. ❤️",
+      memories: [
+        "Our first conversation ❤️",
+        "That laugh I could listen to forever.",
+        "That one unforgettable day.",
+        "All the random moments.",
+        "Every silly conversation.",
+        "My favourite memory? Probably just being with you."
+      ],
+      finalMessage: "I love you more than words can explain. ❤️"
+    };
+
+    /* Audio Synthesizer (Zero External Dependencies) */
+    class CosmicAudio {
+      constructor() {
+        this.ctx = null;
+        this.enabled = false;
+        this.droneOsc1 = null;
+        this.droneOsc2 = null;
+        this.droneGain = null;
+      }
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) {
+            this.ctx = new AudioContext();
+          }
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      }
+      toggle() {
+        this.enabled = !this.enabled;
+        if (this.enabled) {
+          this.init();
+          this.startAmbient();
+        } else {
+          this.stopAmbient();
+        }
+        return this.enabled;
+      }
+      startAmbient() {
+        if (!this.ctx || !this.enabled) return;
+        try {
+          const now = this.ctx.currentTime;
+          this.droneGain = this.ctx.createGain();
+          this.droneGain.gain.setValueAtTime(0.001, now);
+          this.droneGain.gain.exponentialRampToValueAtTime(0.045, now + 3);
+          this.droneGain.connect(this.ctx.destination);
+
+          this.droneOsc1 = this.ctx.createOscillator();
+          this.droneOsc1.type = 'sine';
+          this.droneOsc1.frequency.setValueAtTime(110, now); // A2 warm drone
+          this.droneOsc1.connect(this.droneGain);
+          this.droneOsc1.start();
+
+          this.droneOsc2 = this.ctx.createOscillator();
+          this.droneOsc2.type = 'triangle';
+          this.droneOsc2.frequency.setValueAtTime(164.81, now); // E3 fifth
+          this.droneOsc2.connect(this.droneGain);
+          this.droneOsc2.start();
+        } catch(e) {}
+      }
+      stopAmbient() {
+        if (this.droneGain && this.ctx) {
+          try {
+            this.droneGain.gain.setValueAtTime(this.droneGain.gain.value, this.ctx.currentTime);
+            this.droneGain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 1);
+            setTimeout(() => {
+              try {
+                this.droneOsc1 && this.droneOsc1.stop();
+                this.droneOsc2 && this.droneOsc2.stop();
+              } catch(e) {}
+            }, 1000);
+          } catch(e) {}
+        }
+      }
+      playHeartbeat() {
+        if (!this.ctx || !this.enabled) return;
+        try {
+          const now = this.ctx.currentTime;
+          // Lub-dub
+          [0, 0.28].forEach((delay, idx) => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'sine';
+            const freq = idx === 0 ? 65 : 55;
+            osc.frequency.setValueAtTime(freq, now + delay);
+            osc.frequency.exponentialRampToValueAtTime(35, now + delay + 0.18);
+            gain.gain.setValueAtTime(0.3, now + delay);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + delay + 0.22);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start(now + delay);
+            osc.stop(now + delay + 0.24);
+          });
+        } catch(e) {}
+      }
+      playChime(freq = 880) {
+        if (!this.ctx || !this.enabled) return;
+        try {
+          const now = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, now);
+          gain.gain.setValueAtTime(0.12, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now);
+          osc.stop(now + 1.3);
+        } catch(e) {}
+      }
+      playExplosion() {
+        if (!this.ctx || !this.enabled) return;
+        try {
+          const now = this.ctx.currentTime;
+          [523.25, 659.25, 783.99, 1046.50].forEach((f, i) => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(f, now + i * 0.08);
+            gain.gain.setValueAtTime(0.15, now + i * 0.08);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.08 + 1.8);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start(now + i * 0.08);
+            osc.stop(now + i * 0.08 + 1.9);
+          });
+        } catch(e) {}
+      }
+    }
+
+    const audio = new CosmicAudio();
+
+    /* ==================================================
+       CANVAS COSMOS ENGINE
+       ================================================== */
+    const canvas = document.getElementById('universeCanvas');
+    const ctx = canvas.getContext('2d');
+    let width = 0;
+    let height = 0;
+    let dpr = 1;
+
+    let stars = [];
+    let shootingStars = [];
+    let explosiveParticles = [];
+    let heartParticles = [];
+    let ecgProgress = 0;
+    let currentSceneIndex = 1;
+    let isHeartbeatScene = false;
+
+    function resizeCanvas() {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      ctx.scale(dpr, dpr);
+      initStars();
+      initHeartParticles();
+    }
+
+    function initStars() {
+      stars = [];
+      const count = Math.floor((width * height) / 3600);
+      for (let i = 0; i < count; i++) {
+        stars.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          radius: Math.random() * 1.5 + 0.4,
+          baseAlpha: Math.random() * 0.7 + 0.3,
+          twinkleSpeed: Math.random() * 0.03 + 0.008,
+          phase: Math.random() * Math.PI * 2,
+          color: Math.random() > 0.35 ? '#ffffff' : (Math.random() > 0.5 ? '#f6c87a' : '#ffa8ba')
+        });
+      }
+    }
+
+    function initHeartParticles() {
+      heartParticles = [];
+      const particleCount = 280;
+      for (let i = 0; i < particleCount; i++) {
+        const t = (i / particleCount) * Math.PI * 2;
+        // Heart curve parametric formula
+        const x = 16 * Math.pow(Math.sin(t), 3);
+        const y = -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
+        heartParticles.push({
+          baseX: x,
+          baseY: y,
+          speed: Math.random() * 0.04 + 0.02,
+          offset: Math.random() * Math.PI * 2,
+          radius: Math.random() * 2 + 1,
+          hue: Math.random() > 0.4 ? 'rgba(255, 77, 121, ' : 'rgba(246, 200, 122, '
+        });
+      }
+    }
+
+    function triggerExplosion(centerX, centerY, count = 120, colors = ['#f6c87a', '#ff4d79', '#ffffff']) {
+      for (let i = 0; i < count; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 7 + 2;
+        explosiveParticles.push({
+          x: centerX,
+          y: centerY,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          alpha: 1,
+          decay: Math.random() * 0.016 + 0.008,
+          radius: Math.random() * 3 + 1.2,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          isHeart: Math.random() > 0.65
+        });
+      }
+      audio.playExplosion();
+    }
+
+    // Animation Loop
+    let lastTime = 0;
+    let heartbeatPhase = 0;
+
+    function renderUniverse(time) {
+      requestAnimationFrame(renderUniverse);
+      const dt = (time - lastTime) * 0.001 || 0.016;
+      lastTime = time;
+
+      ctx.clearRect(0, 0, width, height);
+
+      // Deep space background gradient
+      const bgGrad = ctx.createRadialGradient(width/2, height*0.4, 30, width/2, height/2, Math.max(width, height)*0.9);
+      bgGrad.addColorStop(0, '#0c071d');
+      bgGrad.addColorStop(0.6, '#060412');
+      bgGrad.addColorStop(1, '#020208');
+      ctx.fillStyle = bgGrad;
+      ctx.fillRect(0, 0, width, height);
+
+      // Draw Twinkling Stars
+      for (let s of stars) {
+        s.phase += s.twinkleSpeed;
+        const alpha = s.baseAlpha + Math.sin(s.phase) * 0.3;
+        ctx.fillStyle = s.color;
+        ctx.globalAlpha = Math.max(0.1, Math.min(1, alpha));
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+
+      // Occasional shooting star
+      if (Math.random() < 0.012 && shootingStars.length < 3) {
+        shootingStars.push({
+          x: Math.random() * width,
+          y: Math.random() * (height * 0.4),
+          length: Math.random() * 90 + 50,
+          speed: Math.random() * 9 + 8,
+          angle: (Math.PI / 4) + (Math.random() * 0.2 - 0.1),
+          alpha: 1
+        });
+      }
+
+      // Draw shooting stars
+      for (let i = shootingStars.length - 1; i >= 0; i--) {
+        const st = shootingStars[i];
+        st.x += Math.cos(st.angle) * st.speed;
+        st.y += Math.sin(st.angle) * st.speed;
+        st.alpha -= 0.02;
+
+        if (st.alpha <= 0 || st.x > width || st.y > height) {
+          shootingStars.splice(i, 1);
+          continue;
+        }
+
+        const tailX = st.x - Math.cos(st.angle) * st.length;
+        const tailY = st.y - Math.sin(st.angle) * st.length;
+        const grad = ctx.createLinearGradient(tailX, tailY, st.x, st.y);
+        grad.addColorStop(0, 'rgba(255, 255, 255, 0)');
+        grad.addColorStop(1, `rgba(255, 255, 255, ${st.alpha})`);
+
+        ctx.strokeStyle = grad;
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(tailX, tailY);
+        ctx.lineTo(st.x, st.y);
+        ctx.stroke();
+      }
+
+      // Scene 6 Heartbeat / Particle Heart Visualizer
+      if (isHeartbeatScene) {
+        heartbeatPhase += dt * 3.5;
+        // rhythmic heartbeat beat pulse formula
+        const beatCycle = Math.sin(heartbeatPhase);
+        let heartScale = 8;
+        if (beatCycle > 0.6) {
+          heartScale = 8 + (beatCycle - 0.6) * 4.5;
+          if (Math.floor(heartbeatPhase * 10) % 20 === 0) {
+            audio.playHeartbeat();
+          }
+        }
+
+        const cx = width / 2;
+        const cy = height * 0.52;
+
+        // Draw animated particle 3D heart
+        for (let hp of heartParticles) {
+          const scale = heartScale + Math.sin(time * 0.002 + hp.offset) * 0.4;
+          const px = cx + hp.baseX * scale;
+          const py = cy + hp.baseY * scale;
+
+          ctx.fillStyle = hp.hue + '0.85)';
+          ctx.beginPath();
+          ctx.arc(px, py, hp.radius, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // Draw glowing ECG heartbeat trace in center
+        ctx.beginPath();
+        ctx.strokeStyle = 'rgba(255, 77, 121, 0.4)';
+        ctx.lineWidth = 1.8;
+        const ecgY = cy + 105;
+        const step = width / 50;
+        for (let i = 0; i < 50; i++) {
+          const ex = i * step;
+          let ey = ecgY;
+          if (i > 20 && i < 30) {
+            const wave = Math.sin((i - 20) * 0.6 + time * 0.008);
+            ey += (i === 24 ? -35 : (i === 26 ? 25 : wave * 10));
+          }
+          if (i === 0) ctx.moveTo(ex, ey);
+          else ctx.lineTo(ex, ey);
+        }
+        ctx.stroke();
+      }
+
+      // Explosive Particles / Golden Confetti
+      for (let i = explosiveParticles.length - 1; i >= 0; i--) {
+        const ep = explosiveParticles[i];
+        ep.x += ep.vx;
+        ep.y += ep.vy;
+        ep.vy += 0.08; // gravity
+        ep.vx *= 0.98;
+        ep.alpha -= ep.decay;
+
+        if (ep.alpha <= 0) {
+          explosiveParticles.splice(i, 1);
+          continue;
+        }
+
+        ctx.globalAlpha = Math.max(0, ep.alpha);
+        ctx.fillStyle = ep.color;
+        if (ep.isHeart) {
+          // Draw mini heart
+          const hs = ep.radius * 1.8;
+          ctx.beginPath();
+          ctx.arc(ep.x - hs/2, ep.y - hs/2, hs/2, Math.PI, 0, false);
+          ctx.arc(ep.x + hs/2, ep.y - hs/2, hs/2, Math.PI, 0, false);
+          ctx.lineTo(ep.x, ep.y + hs);
+          ctx.closePath();
+          ctx.fill();
+        } else {
+          ctx.beginPath();
+          ctx.arc(ep.x, ep.y, ep.radius, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    /* ==================================================
+       SCENE LOGIC & CINEMATIC PACING
+       ================================================== */
+    function showScene(sceneIndex) {
+      currentSceneIndex = sceneIndex;
+      isHeartbeatScene = (sceneIndex === 6);
+
+      document.querySelectorAll('.scene').forEach(sc => sc.classList.remove('active'));
+      const targetScene = document.getElementById(`scene-${sceneIndex}`);
+      if (targetScene) {
+        targetScene.classList.add('active');
+        targetScene.scrollTop = 0;
+      }
+
+      // Scene specific entries
+      if (sceneIndex === 2) {
+        runScene2Animation();
+      } else if (sceneIndex === 4) {
+        startLoveLetterTypewriter();
+      } else if (sceneIndex === 5) {
+        buildMemoryGalaxy();
+      } else if (sceneIndex === 6) {
+        runHeartbeatSequence();
+      } else if (sceneIndex === 8) {
+        runWishSequence();
+      }
+    }
+
+    // SCENE 1 Text Pacing
+    function initScene1() {
+      const textElem = document.getElementById('scene1-text');
+      const actionElem = document.getElementById('scene1-action');
+
+      setTimeout(() => {
+        textElem.style.opacity = '0';
+        setTimeout(() => {
+          textElem.textContent = 'Because today…';
+          textElem.style.opacity = '1';
+          audio.playChime(523.25);
+        }, 800);
+      }, 2600);
+
+      setTimeout(() => {
+        textElem.style.opacity = '0';
+        setTimeout(() => {
+          textElem.innerHTML = 'someone very special was born. <span style="color:#ff4d79;">❤️</span>';
+          textElem.style.opacity = '1';
+          audio.playChime(659.25);
+          actionElem.style.opacity = '1';
+        }, 800);
+      }, 5400);
+    }
+
+    // SCENE 2 Reveal Animation
+    function runScene2Animation() {
+      const numElem = document.getElementById('reveal-date-number');
+      const subElem = document.getElementById('reveal-sub');
+      const extraElem = document.getElementById('reveal-extra');
+
+      // Extract day and month numbers from config
+      const dateParts = CONFIG.birthdayDate.split(' ');
+      const dayNum = dateParts[0] || '06';
+
+      numElem.textContent = dayNum;
+      audio.playChime(587.33);
+
+      setTimeout(() => {
+        numElem.style.transform = 'scale(1.15)';
+        numElem.textContent = '10';
+        audio.playChime(659.25);
+      }, 1400);
+
+      setTimeout(() => {
+        numElem.style.transform = 'scale(1)';
+        numElem.innerHTML = `YOUR SPECIAL DAY <span style="color:#ff4d79;">❤️</span>`;
+        numElem.style.fontSize = 'clamp(26px, 6.8vw, 42px)';
+        subElem.innerHTML = `HAPPY BIRTHDAY, <span style="color:#ffa8ba;">${CONFIG.relationship.toUpperCase()}</span>`;
+        extraElem.style.opacity = '1';
+        triggerExplosion(width / 2, height * 0.45, 60);
+      }, 2900);
+    }
+
+    // SCENE 3 Envelope Handling
+    const envelopeBox = document.getElementById('envelopeBox');
+    const btnOpenEnv = document.getElementById('btn-open-envelope');
+    const envButtons = document.getElementById('envelopeButtons');
+    const envContinue = document.getElementById('envelopeContinueBtn');
+
+    function openEnvelope() {
+      if (envelopeBox.classList.contains('opened')) {
+        showScene(4);
+        return;
+      }
+      envelopeBox.classList.add('opened');
+      envButtons.style.display = 'none';
+      envContinue.style.display = 'block';
+      triggerExplosion(width / 2, height * 0.5, 70);
+      audio.playChime(783.99);
+    }
+    btnOpenEnv.addEventListener('click', openEnvelope);
+    envelopeBox.addEventListener('click', openEnvelope);
+
+    // SCENE 4 Typewriter
+    let typewriterTimeout = null;
+    function startLoveLetterTypewriter() {
+      const container = document.getElementById('letterTypingBody');
+      const text = CONFIG.letter;
+      container.innerHTML = '';
+      if (typewriterTimeout) clearTimeout(typewriterTimeout);
+
+      let index = 0;
+      function typeChar() {
+        if (index < text.length) {
+          const char = text.charAt(index);
+          container.textContent = text.substring(0, index + 1);
+          index++;
+          const delay = (char === '\n' ? 320 : (char === '.' || char === '!' ? 220 : 32));
+          typewriterTimeout = setTimeout(typeChar, delay);
+        } else {
+          container.innerHTML = text.replace(/\n/g, '<br>') + ' <span class="cursor-blink"></span>';
+        }
+      }
+      typeChar();
+    }
+
+    // SCENE 5 Memory Galaxy
+    function buildMemoryGalaxy() {
+      const galaxyBox = document.getElementById('galaxyBox');
+      galaxyBox.querySelectorAll('.memory-star').forEach(s => s.remove());
+
+      const memories = CONFIG.memories;
+      const count = memories.length;
+      const popCard = document.getElementById('memoryCardPop');
+      const popText = document.getElementById('memoryPopText');
+
+      // Positions arranged gracefully forming a constellation heart layout
+      const positions = [
+        { x: 30, y: 35 },
+        { x: 50, y: 22 },
+        { x: 70, y: 35 },
+        { x: 80, y: 55 },
+        { x: 50, y: 82 },
+        { x: 20, y: 55 }
+      ];
+
+      memories.forEach((mem, i) => {
+        const pos = positions[i % positions.length];
+        const star = document.createElement('div');
+        star.className = 'memory-star';
+        star.style.left = `${pos.x}%`;
+        star.style.top = `${pos.y}%`;
+
+        const dot = document.createElement('div');
+        dot.className = 'memory-star-dot';
+        star.appendChild(dot);
+
+        star.addEventListener('click', (e) => {
+          e.stopPropagation();
+          popText.textContent = mem;
+          popCard.classList.add('show');
+          triggerExplosion((pos.x / 100) * width, (pos.y / 100) * height, 25);
+          audio.playChime(600 + i * 80);
+        });
+
+        galaxyBox.appendChild(star);
+      });
+    }
+
+    // SCENE 6 Heartbeat Pacing
+    function runHeartbeatSequence() {
+      const t1 = document.getElementById('heartbeat-text-1');
+      const t2 = document.getElementById('heartbeat-text-2');
+      t2.style.opacity = '0';
+      setTimeout(() => {
+        t2.style.opacity = '1';
+        audio.playHeartbeat();
+      }, 2200);
+    }
+
+    // SCENE 7 Cake & Blow Candle Interaction
+    const btnBlow = document.getElementById('btn-blow-candles');
+    let candleBlown = false;
+
+    function blowCandles() {
+      if (candleBlown) return;
+      candleBlown = true;
+      document.querySelectorAll('.flame').forEach(f => f.classList.add('blown'));
+
+      // Brief darkness then huge burst
+      setTimeout(() => {
+        triggerExplosion(width / 2, height * 0.45, 180, ['#f6c87a', '#ffe6a3', '#ff4d79', '#ffffff']);
+        document.getElementById('cakeActionArea').innerHTML = `
+          <p class="glow-gold" style="font-size: 19px; font-weight: 600; margin-top: 15px;">Your wish is written in the stars! ✨</p>
+          <button class="btn-universe" id="btn-after-cake" style="margin-top: 18px;">SEE MY WISH →</button>
+        `;
+        document.getElementById('btn-after-cake').addEventListener('click', () => showScene(8));
+      }, 600);
+    }
+    btnBlow.addEventListener('click', blowCandles);
+
+    // Optional Mic Blow Detection
+    function attemptMicBlow() {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return;
+      navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const analyser = audioCtx.createAnalyser();
+        const mic = audioCtx.createMediaStreamSource(stream);
+        mic.connect(analyser);
+        analyser.fftSize = 256;
+        const buffer = new Uint8Array(analyser.frequencyBinCount);
+
+        function checkMic() {
+          if (candleBlown) {
+            stream.getTracks().forEach(t => t.stop());
+            return;
+          }
+          analyser.getByteFrequencyData(buffer);
+          let sum = 0;
+          for (let i = 0; i < buffer.length; i++) sum += buffer[i];
+          const avg = sum / buffer.length;
+          // Threshold for strong blowing breath sound
+          if (avg > 58) {
+            blowCandles();
+            stream.getTracks().forEach(t => t.stop());
+            return;
+          }
+          requestAnimationFrame(checkMic);
+        }
+        checkMic();
+      }).catch(() => {
+        // Microphone access denied or unavailable, tap interaction works 100% reliably
+      });
+    }
+
+    // SCENE 8 Wish Pacing
+    function runWishSequence() {
+      const line1 = document.getElementById('wishLine1');
+      const line2 = document.getElementById('wishLine2');
+      const continuation = document.getElementById('wishContinuation');
+      line2.style.opacity = '0';
+      continuation.style.opacity = '0';
+
+      setTimeout(() => {
+        line2.style.opacity = '1';
+        audio.playChime(659.25);
+      }, 1600);
+
+      setTimeout(() => {
+        continuation.style.opacity = '1';
+        continuation.style.transition = 'opacity 1s ease';
+        audio.playChime(783.99);
+      }, 3400);
+    }
+
+    // SCENE 9 Gift Box
+    const giftBox = document.getElementById('giftBoxContainer');
+    const btnOpenGift = document.getElementById('btn-open-gift');
+    const giftAction = document.getElementById('giftActionArea');
+    const giftReveal = document.getElementById('giftRevealArea');
+
+    function openGift() {
+      giftBox.classList.add('opened');
+      giftAction.style.display = 'none';
+      setTimeout(() => {
+        giftReveal.style.display = 'block';
+        triggerExplosion(width / 2, height * 0.4, 160, ['#ff4d79', '#ffa8ba', '#f6c87a', '#ffffff']);
+      }, 500);
+    }
+    btnOpenGift.addEventListener('click', openGift);
+    giftBox.addEventListener('click', openGift);
+
+    /* ==================================================
+       NAVIGATION EVENT HANDLERS
+       ================================================== */
+    document.getElementById('btn-enter').addEventListener('click', () => {
+      audio.init();
+      showScene(2);
+    });
+    document.getElementById('btn-to-name').addEventListener('click', () => showScene(3));
+    document.getElementById('btn-to-letter').addEventListener('click', () => showScene(4));
+    document.getElementById('btn-to-galaxy').addEventListener('click', () => showScene(5));
+    document.getElementById('btn-to-heartbeat').addEventListener('click', () => showScene(6));
+    document.getElementById('btn-to-cake').addEventListener('click', () => {
+      showScene(7);
+      attemptMicBlow();
+    });
+    document.getElementById('btn-to-gift').addEventListener('click', () => showScene(9));
+    document.getElementById('btn-to-final').addEventListener('click', () => {
+      showScene(10);
+      triggerExplosion(width / 2, height * 0.35, 140);
+    });
+
+    // Replay Universe smoothly without reload
+    document.getElementById('btn-replay').addEventListener('click', () => {
+      // Reset state
+      candleBlown = false;
+      document.querySelectorAll('.flame').forEach(f => f.classList.remove('blown'));
+      envelopeBox.classList.remove('opened');
+      envButtons.style.display = 'block';
+      envContinue.style.display = 'none';
+      giftBox.classList.remove('opened');
+      giftAction.style.display = 'block';
+      giftReveal.style.display = 'none';
+      document.getElementById('cakeActionArea').innerHTML = `
+        <button class="btn-universe" id="btn-blow-candles">BLOW THE CANDLES 🕯️</button>
+        <p style="font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 10px;" id="micHint">
+          Tap button or blow softly into microphone
+        </p>
+      `;
+      document.getElementById('btn-blow-candles').addEventListener('click', blowCandles);
+      showScene(1);
+      initScene1();
+    });
+
+    /* ==================================================
+       AUDIO BUTTON TOGGLE
+       ================================================== */
+    const audioBtn = document.getElementById('audioToggleBtn');
+    const audioIcon = document.getElementById('audioIcon');
+    audioBtn.addEventListener('click', () => {
+      const isOn = audio.toggle();
+      audioIcon.textContent = isOn ? '🔊' : '🔇';
+    });
+
+    /* ==================================================
+       PERSONALIZATION MODAL & CONFIG SYNC
+       ================================================== */
+    const configModal = document.getElementById('configModal');
+    const configEditBtn = document.getElementById('configEditBtn');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const btnSaveConfig = document.getElementById('btnSaveConfig');
+
+    function populateModalFields() {
+      document.getElementById('cfgName').value = CONFIG.name;
+      document.getElementById('cfgRelationship').value = CONFIG.relationship;
+      document.getElementById('cfgDate').value = CONFIG.birthdayDate;
+      document.getElementById('cfgSender').value = CONFIG.senderName;
+      document.getElementById('cfgLetter').value = CONFIG.letter;
+      document.getElementById('cfgFinal').value = CONFIG.finalMessage;
+    }
+
+    function applyConfigToUI() {
+      document.getElementById('envelopeRecipientText').innerHTML = `Happy Birthday,<br>${CONFIG.name} ❤️`;
+      document.getElementById('letterHeading').textContent = `To My Favourite Person ❤️`;
+      document.getElementById('letterSender').textContent = `— ${CONFIG.senderName}`;
+      document.getElementById('finalRecipient').textContent = `${CONFIG.name.toUpperCase()} ❤️`;
+      document.getElementById('finalCustomQuote').textContent = CONFIG.finalMessage;
+    }
+
+    configEditBtn.addEventListener('click', () => {
+      populateModalFields();
+      configModal.classList.add('open');
+    });
+    closeModalBtn.addEventListener('click', () => {
+      configModal.classList.remove('open');
+    });
+    btnSaveConfig.addEventListener('click', () => {
+      CONFIG.name = document.getElementById('cfgName').value.trim() || CONFIG.name;
+      CONFIG.relationship = document.getElementById('cfgRelationship').value.trim() || CONFIG.relationship;
+      CONFIG.birthdayDate = document.getElementById('cfgDate').value.trim() || CONFIG.birthdayDate;
+      CONFIG.senderName = document.getElementById('cfgSender').value.trim() || CONFIG.senderName;
+      CONFIG.letter = document.getElementById('cfgLetter').value.trim() || CONFIG.letter;
+      CONFIG.finalMessage = document.getElementById('cfgFinal').value.trim() || CONFIG.finalMessage;
+
+      applyConfigToUI();
+      configModal.classList.remove('open');
+      triggerExplosion(width / 2, height / 2, 40);
+    });
+
+    // Close modal when tapping backdrop
+    configModal.addEventListener('click', (e) => {
+      if (e.target === configModal) configModal.classList.remove('open');
+    });
+
+    // Visibility change optimization (pause animation when tab is inactive)
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden && audio.enabled) {
+        audio.stopAmbient();
+      } else if (!document.hidden && audio.enabled) {
+        audio.startAmbient();
+      }
+    });
+
+    /* ==================================================
+       INITIALIZATION
+       ================================================== */
+    window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('load', () => {
+      resizeCanvas();
+      applyConfigToUI();
+      initScene1();
+      requestAnimationFrame(renderUniverse);
+    });
+  </script>
+</body>
+</html>
